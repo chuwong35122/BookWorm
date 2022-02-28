@@ -5,9 +5,14 @@ import BookListItem from './../components/molecules/BookListItem';
 import {GENRES} from '../libs/constant';
 import useAsyncEffect from './../hooks/useAsyncEffect';
 import {getBooksByGenre} from '../libs/storage';
-import {Icon} from 'react-native-elements';
+import {FAB, Icon} from 'react-native-elements';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../navigation/types';
 
 const Home = () => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [current, setCurrent] = React.useState('Action');
   const [books, setBooks] = React.useState([]);
 
@@ -20,7 +25,9 @@ const Home = () => {
     <View style={styles.container}>
       <FlatList
         data={GENRES}
-        renderItem={({item}) => <BookListItem data={item} />}
+        renderItem={({item}) => (
+          <BookListItem data={item} setCurrent={setCurrent} />
+        )}
         keyExtractor={(_, index) => index.toString()}
         // onViewableItemsChanged={({changed, viewableItems}) => {
         //   console.log(viewableItems[0].item.title);
@@ -32,15 +39,26 @@ const Home = () => {
       />
 
       <View style={styles.preview}>
+        <FAB
+          visible={true}
+          icon={{name: 'add'}}
+          color="rgb(187,220,203)"
+          onPress={() => navigation.navigate('NewBook', {genre: current})}
+          placement="right"
+        />
         {books.length > 0 ? (
           <FlatList
             data={books}
-            renderItem={({item}) => <BookListItem data={item} />}
+            renderItem={({item}) => (
+              <BookListItem data={item} setCurrent={setCurrent} />
+            )}
             keyExtractor={(_, index) => index.toString()}
           />
         ) : (
-          <View>
-            <Text>Memo your first {current} book now!</Text>
+          <View style={{flexDirection: 'row'}}>
+            <Text>Memo your first </Text>
+            <Text style={{fontWeight: 'bold'}}>{current}</Text>
+            <Text> book now!</Text>
           </View>
         )}
       </View>
@@ -55,7 +73,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#ffecb3',
+    backgroundColor: 'rgb(253,238,179)',
   },
   shelf: {
     backgroundColor: '#fff',
