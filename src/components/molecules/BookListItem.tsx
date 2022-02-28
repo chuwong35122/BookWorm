@@ -1,20 +1,20 @@
-import {Pressable, StyleSheet, Text, View} from 'react-native';
+import {Pressable, StyleSheet, Text} from 'react-native';
 import React from 'react';
-import {useNavigation} from '@react-navigation/native';
-import {RootStackParamList} from '../../navigation/types';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {Genre} from '../../screens/Home';
+import {Genre} from './../../libs/constant';
 
 type BookListItemType = {
   data: Genre;
+  setCurrent: (val: string) => void;
 };
 
-const BookListItem = ({data}: BookListItemType) => {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+const BookListItem = ({data, setCurrent}: BookListItemType) => {
+  // const navigation =
+  // useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   return (
-    <Pressable style={[styles.container, {backgroundColor: data.bgColor}]}>
+    <Pressable
+      style={[styles.container, {backgroundColor: data.bgColor}]}
+      onPress={() => setCurrent(data.title)}>
       <Text style={styles.title}>{data.title}</Text>
     </Pressable>
   );
