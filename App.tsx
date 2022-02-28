@@ -4,6 +4,7 @@ import {LogBox} from 'react-native';
 import React from 'react';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import Home from './src/screens/Home';
+import NewBook from './src/screens/NewBook';
 import {RootStackParamList} from './src/navigation/types';
 
 const App = () => {
@@ -22,6 +23,20 @@ const App = () => {
             name="Home"
             component={Home}
             options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="NewBook"
+            component={NewBook}
+            options={{
+              title: 'Add a New Book',
+              headerStyle: {
+                backgroundColor: 'rgb(180,221,227)',
+              },
+              headerTintColor: '#0d47a1',
+              headerTitleStyle: {
+                fontWeight: '500',
+              },
+            }}
           />
         </Stack.Navigator>
       </NavigationContainer>
