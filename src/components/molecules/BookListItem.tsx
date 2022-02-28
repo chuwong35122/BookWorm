@@ -1,16 +1,22 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {Pressable, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
+import {useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '../../navigation/types';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {Genre} from '../../screens/Home';
 
 type BookListItemType = {
-  category: string;
-  bgColor: string;
+  data: Genre;
 };
 
-const BookListItem = ({category, bgColor}: BookListItemType) => {
+const BookListItem = ({data}: BookListItemType) => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
   return (
-    <View style={[styles.container, {backgroundColor: bgColor}]}>
-      <Text style={styles.title}>{category}</Text>
-    </View>
+    <Pressable style={[styles.container, {backgroundColor: data.bgColor}]}>
+      <Text style={styles.title}>{data.title}</Text>
+    </Pressable>
   );
 };
 
@@ -33,5 +39,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#fff',
+    transform: [{rotate: '90deg'}],
   },
 });

@@ -2,41 +2,47 @@ import {StyleSheet, View, Text} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import React from 'react';
 import BookListItem from './../components/molecules/BookListItem';
+import {GENRES} from '../libs/constant';
+import useAsyncEffect from './../hooks/useAsyncEffect';
+import {getBooksByGenre} from '../libs/storage';
+import {Icon} from 'react-native-elements';
 
 const Home = () => {
   const [current, setCurrent] = React.useState('Action');
-  const genres = [
-    {title: 'Action', bgColor: '#e53935'},
-    {title: 'Mystery', bgColor: '#424242'},
-    {title: 'Fantasy', bgColor: '#fbc02d'},
-    {title: 'Horror', bgColor: '#4a148c'},
-    {title: 'Literary Fiction', bgColor: '#ab47bc'},
-    {title: 'Romance', bgColor: '#ff80ab'},
-    {title: 'Science Fiction', bgColor: '#ff9800'},
-    {title: 'Thriller', bgColor: '#c41c00'},
-    {title: 'Biography', bgColor: '#795548'},
-    {title: 'History', bgColor: '#5d4037'},
-    {title: 'Memoir', bgColor: '#01579b'},
-    {title: 'Poetry', bgColor: '#f06292'},
-    {title: 'Self-Enrichment', bgColor: '#4caf50'},
-    {title: 'True Crime', bgColor: '#000'},
-  ];
+  const [books, setBooks] = React.useState([]);
+
+  useAsyncEffect(async () => {
+    const result = await getBooksByGenre(current);
+    setBooks(result);
+  }, [current]);
 
   return (
     <View style={styles.container}>
       <FlatList
-        data={genres}
-        renderItem={({item}) => (
-          <BookListItem category={item.title} bgColor={item.bgColor} />
-        )}
+        data={GENRES}
+        renderItem={({item}) => <BookListItem data={item} />}
         keyExtractor={(_, index) => index.toString()}
+        // onViewableItemsChanged={({changed, viewableItems}) => {
+        //   console.log(viewableItems[0].item.title);
+        //   // setCurrent(viewableItems[0].item.title);
+        // }}
         horizontal
         showsHorizontalScrollIndicator={false}
+        style={styles.shelf}
       />
-      <View style={styles.cabinet} />
 
       <View style={styles.preview}>
-        <Text>{current}</Text>
+        {books.length > 0 ? (
+          <FlatList
+            data={books}
+            renderItem={({item}) => <BookListItem data={item} />}
+            keyExtractor={(_, index) => index.toString()}
+          />
+        ) : (
+          <View>
+            <Text>Memo your first {current} book now!</Text>
+          </View>
+        )}
       </View>
     </View>
   );
@@ -48,19 +54,25 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'flex-start',
-    backgroundColor: '#212121',
+    justifyContent: 'space-between',
+    backgroundColor: '#ffecb3',
   },
-  cabinet: {
-    width: '100%',
-    backgroundColor: '#4b2c20',
-    height: 30,
-    position: 'absolute',
-    top: 180,
+  shelf: {
+    backgroundColor: '#fff',
+    height: 340,
+    marginBottom: 10,
+    // elevation: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.37,
+    shadowRadius: 7.49,
   },
   preview: {
-    height: '60%',
-    width: '80%',
+    height: '70%',
+    width: '90%',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
