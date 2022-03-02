@@ -13,6 +13,7 @@
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.5.0",
     "babel-plugin-inline-dotenv": "^1.6.0",
+    "firebase": "^9.6.7",
     "native-base": "^3.3.7",
     "react": "17.0.2",
     "react-native": "0.67.3",
