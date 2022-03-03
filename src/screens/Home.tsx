@@ -1,5 +1,5 @@
 import {StyleSheet, View} from 'react-native';
-import {Icon, Input, ScrollView, Text, KeyboardAvoidingView} from 'native-base';
+import {ScrollView, Text} from 'native-base';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -17,7 +17,7 @@ const Home = () => {
         <ScrollView>
           <View style={styles.myBooks}>
             <Text bold fontSize="xl">
-              My Books {process.env.GCP_APIKEY}
+              My Books
             </Text>
           </View>
         </ScrollView>
