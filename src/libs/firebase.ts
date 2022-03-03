@@ -1,6 +1,4 @@
-import {getApps, initializeApp} from 'firebase/app';
-
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: 'AIzaSyAng0Hm2cOGax1nEMw8OfGtiVHOK6Q1BnA',
   authDomain: 'bookself-f8efe.firebaseapp.com',
   projectId: 'bookself-f8efe',
@@ -9,7 +7,3 @@ const firebaseConfig = {
   appId: '1:388067965137:web:8722494454becb73f2adf0',
   measurementId: 'G-1HGC4CSGGK',
 };
-
-if (!getApps().length) {
-  initializeApp(firebaseConfig);
-}
