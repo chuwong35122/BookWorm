@@ -6,58 +6,142 @@ import {
   FormControl,
   WarningOutlineIcon,
   ScrollView,
+  Icon,
+  Button,
+  VStack,
 } from 'native-base';
+import {Formik} from 'formik';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {NewAccount} from '../interfaces/user.interface';
+import {
+  signUpErrors,
+  emailSignUpFormValidation,
+} from './../libs/authentication/signup';
 
 const EmailSignUp = () => {
+  const [show, setShow] = React.useState(false);
+  const [showConfirm, setShowConfirm] = React.useState(false);
+
+  const account: NewAccount = {
+    email: undefined,
+    username: undefined,
+    password: undefined,
+    confirmPassword: undefined,
+  };
+
+  function onSubmit(data: NewAccount) {
+    console.log(data);
+  }
+
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        <View style={styles.signInContainer}>
-          <Text fontSize="md">Already have an account? Sign-in here!</Text>
-          <FormControl isInvalid w="85%" my="4">
-            <FormControl.Label>Email</FormControl.Label>
-            <Input placeholder="Enter Email" />
-            <FormControl.ErrorMessage
-              leftIcon={<WarningOutlineIcon size="xs" />}>
-              Error
-            </FormControl.ErrorMessage>
-            <FormControl.Label>Password</FormControl.Label>
-            <Input placeholder="Enter password" />
-            <FormControl.ErrorMessage
-              leftIcon={<WarningOutlineIcon size="xs" />}>
-              Try different from previous passwords.
-            </FormControl.ErrorMessage>
-          </FormControl>
-        </View>
-        <View style={styles.signInContainer}>
-          <Text fontSize="md">
-            Using BookSelf for the first time? Sign-up here!
-          </Text>
-          <View style={styles.signInContainer}>
-            <FormControl isInvalid w="85%" my="4">
-              <FormControl.Label>Email</FormControl.Label>
-              <Input placeholder="Enter Email" />
-              <FormControl.ErrorMessage
-                leftIcon={<WarningOutlineIcon size="xs" />}>
-                Error0
-              </FormControl.ErrorMessage>
-              <FormControl.Label>Password</FormControl.Label>
-              <Input placeholder="Enter password" />
-              <FormControl.ErrorMessage
-                leftIcon={<WarningOutlineIcon size="xs" />}>
-                Error1
-              </FormControl.ErrorMessage>
-              <FormControl.Label>Confirm Password</FormControl.Label>
-              <Input placeholder="Confirm password" />
-              <FormControl.ErrorMessage
-                leftIcon={<WarningOutlineIcon size="xs" />}>
-                Error2
-              </FormControl.ErrorMessage>
-            </FormControl>
+    <Formik
+      initialValues={account}
+      onSubmit={onSubmit}
+      validationSchema={emailSignUpFormValidation}>
+      {({handleChange, handleSubmit, errors}) => (
+        <ScrollView>
+          <View style={styles.container}>
+            <View style={styles.signInContainer}>
+              <Text fontSize="xl" bold>
+                Sign-Up
+              </Text>
+              <VStack w="90%" gap={4}>
+                <FormControl isRequired isInvalid={'email' in errors}>
+                  <FormControl.Label>Email</FormControl.Label>
+                  <Input
+                    placeholder="Enter Email"
+                    onChangeText={handleChange('email')}
+                  />
+                  <FormControl.ErrorMessage
+                    leftIcon={<WarningOutlineIcon size="xs" />}>
+                    {errors.email}
+                  </FormControl.ErrorMessage>
+                </FormControl>
+                <FormControl isRequired isInvalid={'username' in errors}>
+                  <FormControl.Label>Username</FormControl.Label>
+                  <Input
+                    InputLeftElement={
+                      <Icon
+                        as={<MaterialIcons name="person" />}
+                        size={5}
+                        ml="2"
+                        color="muted.400"
+                      />
+                    }
+                    placeholder="Username"
+                    onChangeText={handleChange('username')}
+                  />
+                  <FormControl.ErrorMessage
+                    leftIcon={<WarningOutlineIcon size="xs" />}>
+                    {errors.username}
+                  </FormControl.ErrorMessage>
+                </FormControl>
+                <FormControl isRequired isInvalid={'password' in errors}>
+                  <FormControl.Label>Password</FormControl.Label>
+                  <Input
+                    type={show ? 'text' : 'password'}
+                    InputRightElement={
+                      <Icon
+                        as={
+                          <MaterialIcons
+                            name={show ? 'visibility' : 'visibility-off'}
+                          />
+                        }
+                        size={5}
+                        mr="2"
+                        color="muted.400"
+                        onPress={() => setShow(!show)}
+                      />
+                    }
+                    onChangeText={handleChange('password')}
+                    placeholder="Password"
+                  />
+                  <FormControl.ErrorMessage
+                    leftIcon={<WarningOutlineIcon size="xs" />}>
+                    {errors.password}
+                  </FormControl.ErrorMessage>
+                </FormControl>
+                <FormControl isRequired isInvalid={'confirmPassword' in errors}>
+                  <FormControl.Label>Confirm Password</FormControl.Label>
+                  <Input
+                    type={showConfirm ? 'text' : 'password'}
+                    InputRightElement={
+                      <Icon
+                        as={
+                          <MaterialIcons
+                            name={showConfirm ? 'visibility' : 'visibility-off'}
+                          />
+                        }
+                        size={5}
+                        mr="2"
+                        color="muted.400"
+                        onPress={() => setShowConfirm(!showConfirm)}
+                      />
+                    }
+                    onChangeText={handleChange('confirmPassword')}
+                    placeholder="Confirm Password"
+                  />
+                  <FormControl.ErrorMessage
+                    leftIcon={<WarningOutlineIcon size="xs" />}>
+                    {errors.confirmPassword}
+                  </FormControl.ErrorMessage>
+                </FormControl>
+                <Button
+                  variant="solid"
+                  backgroundColor="#FFDD57"
+                  _text={{
+                    color: '#1F2937',
+                  }}
+                  mt={4}
+                  onPress={handleSubmit}>
+                  Sign-up!
+                </Button>
+              </VStack>
+            </View>
           </View>
-        </View>
-      </View>
-    </ScrollView>
+        </ScrollView>
+      )}
+    </Formik>
   );
 };
 
