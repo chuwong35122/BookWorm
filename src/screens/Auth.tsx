@@ -1,14 +1,5 @@
 import {Dimensions, StyleSheet, View} from 'react-native';
-import {
-  Text,
-  Button,
-  Icon,
-  Stack,
-  Input,
-  Box,
-  HStack,
-  Pressable,
-} from 'native-base';
+import {Text, Button, Icon, Stack, Input, HStack, Pressable} from 'native-base';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -22,7 +13,7 @@ const Auth = () => {
   const [show, setShow] = React.useState(false);
   return (
     <View style={styles.container}>
-      <View style={styles.top}></View>
+      <View style={styles.top} />
       <View style={styles.bottom}>
         <Stack space={4} w="100%" alignItems="center">
           <Text bold fontSize="xl">
@@ -75,7 +66,7 @@ const Auth = () => {
           </Button>
           <HStack space={4} justifyContent="space-between">
             <Text color="gray.500">Forgot Password?</Text>
-            <Text color="gray.500"> | </Text>
+            <Text color="gray.500">|</Text>
             <Pressable onPress={() => navigation.navigate('EmailSignUp')}>
               <Text color="gray.500">Sign-up</Text>
             </Pressable>
@@ -88,7 +79,7 @@ const Auth = () => {
 
 export default Auth;
 
-const {height, width} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
