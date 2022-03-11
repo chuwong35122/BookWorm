@@ -14,11 +14,18 @@ import {Formik} from 'formik';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {NewAccount} from '../interfaces/user.interface';
 import {
-  signUpErrors,
   emailSignUpFormValidation,
+  signUpWithEmail,
+  storeUsername,
 } from './../libs/authentication/signup';
+import {getAuth} from 'firebase/auth';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../navigation/types';
 
 const EmailSignUp = () => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [show, setShow] = React.useState(false);
   const [showConfirm, setShowConfirm] = React.useState(false);
 
@@ -29,8 +36,27 @@ const EmailSignUp = () => {
     confirmPassword: undefined,
   };
 
-  function onSubmit(data: NewAccount) {
-    console.log(data);
+  async function onSubmit(data: NewAccount) {
+    if (
+      !(
+        data.email &&
+        data.username &&
+        data.username &&
+        data.confirmPassword &&
+        data.password
+      )
+    ) {
+      return;
+    }
+
+    const credential = await signUpWithEmail(data.email, data.password);
+    if (credential.uid) {
+      await storeUsername(data.username, credential.uid);
+      navigation.replace('Home');
+    } else {
+      const auth = getAuth();
+      auth.signOut();
+    }
   }
 
   return (
@@ -38,27 +64,25 @@ const EmailSignUp = () => {
       initialValues={account}
       onSubmit={onSubmit}
       validationSchema={emailSignUpFormValidation}>
-      {({handleChange, handleSubmit, errors}) => (
-        <ScrollView>
+      {({handleChange, handleSubmit, errors, touched}) => (
+        <ScrollView style={{backgroundColor: '#BEE3DB'}}>
           <View style={styles.container}>
             <View style={styles.signInContainer}>
-              <Text fontSize="xl" bold>
+              <Text fontSize="xl" bold my={4}>
                 Sign-Up
               </Text>
-              <VStack w="90%" gap={4}>
+              <VStack w="90%" space={4}>
                 <FormControl isRequired isInvalid={'email' in errors}>
-                  <FormControl.Label>Email</FormControl.Label>
                   <Input
                     placeholder="Enter Email"
                     onChangeText={handleChange('email')}
                   />
                   <FormControl.ErrorMessage
                     leftIcon={<WarningOutlineIcon size="xs" />}>
-                    {errors.email}
+                    {touched.email ? errors.email : ''}
                   </FormControl.ErrorMessage>
                 </FormControl>
                 <FormControl isRequired isInvalid={'username' in errors}>
-                  <FormControl.Label>Username</FormControl.Label>
                   <Input
                     InputLeftElement={
                       <Icon
@@ -73,11 +97,10 @@ const EmailSignUp = () => {
                   />
                   <FormControl.ErrorMessage
                     leftIcon={<WarningOutlineIcon size="xs" />}>
-                    {errors.username}
+                    {touched.username ? errors.username : ''}
                   </FormControl.ErrorMessage>
                 </FormControl>
                 <FormControl isRequired isInvalid={'password' in errors}>
-                  <FormControl.Label>Password</FormControl.Label>
                   <Input
                     type={show ? 'text' : 'password'}
                     InputRightElement={
@@ -98,11 +121,10 @@ const EmailSignUp = () => {
                   />
                   <FormControl.ErrorMessage
                     leftIcon={<WarningOutlineIcon size="xs" />}>
-                    {errors.password}
+                    {touched.password ? errors.password : ''}
                   </FormControl.ErrorMessage>
                 </FormControl>
                 <FormControl isRequired isInvalid={'confirmPassword' in errors}>
-                  <FormControl.Label>Confirm Password</FormControl.Label>
                   <Input
                     type={showConfirm ? 'text' : 'password'}
                     InputRightElement={
@@ -123,7 +145,7 @@ const EmailSignUp = () => {
                   />
                   <FormControl.ErrorMessage
                     leftIcon={<WarningOutlineIcon size="xs" />}>
-                    {errors.confirmPassword}
+                    {touched.confirmPassword ? errors.confirmPassword : ''}
                   </FormControl.ErrorMessage>
                 </FormControl>
                 <Button
@@ -132,7 +154,6 @@ const EmailSignUp = () => {
                   _text={{
                     color: '#1F2937',
                   }}
-                  mt={4}
                   onPress={handleSubmit}>
                   Sign-up!
                 </Button>
@@ -152,11 +173,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
+    backgroundColor: '#BEE3DB',
   },
   signInContainer: {
     width: '100%',
-    paddingHorizontal: 20,
+    flex: 1,
+    paddingBottom: 80,
     alignItems: 'center',
-    marginVertical: 10,
+    borderBottomLeftRadius: 80,
+    borderBottomRightRadius: 80,
+    backgroundColor: '#fff',
   },
 });

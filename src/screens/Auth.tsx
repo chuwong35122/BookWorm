@@ -5,12 +5,28 @@ import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../navigation/types';
+import {signInWithEmail} from '../libs/authentication/signup';
+import {getAuth} from 'firebase/auth';
 
-const Auth = () => {
+const AuthScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const [show, setShow] = React.useState(false);
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+
+  async function handleSignIn() {
+    const credential = await signInWithEmail(email, password);
+    console.log(credential.uid);
+    if (credential.uid) {
+      navigation.replace('Home');
+    } else {
+      const auth = getAuth();
+      auth.signOut();
+    }
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.top} />
@@ -20,6 +36,8 @@ const Auth = () => {
             Sign-in
           </Text>
           <Input
+            value={email}
+            onChangeText={val => setEmail(val)}
             w={{
               base: '75%',
               md: '25%',
@@ -35,6 +53,8 @@ const Auth = () => {
             placeholder="Email"
           />
           <Input
+            value={password}
+            onChangeText={val => setPassword(val)}
             w={{
               base: '75%',
               md: '25%',
@@ -61,11 +81,14 @@ const Auth = () => {
             backgroundColor="#FFDD57"
             _text={{
               color: '#1F2937',
-            }}>
-            Success
+            }}
+            onPress={handleSignIn}>
+            Sign-In
           </Button>
-          <HStack space={4} justifyContent="space-between">
-            <Text color="gray.500">Forgot Password?</Text>
+          <HStack space={4} justifyContent="space-evenly">
+            <Pressable onPress={() => console.log('Forgot password')}>
+              <Text color="gray.500">Forgot Password?</Text>
+            </Pressable>
             <Text color="gray.500">|</Text>
             <Pressable onPress={() => navigation.navigate('EmailSignUp')}>
               <Text color="gray.500">Sign-up</Text>
@@ -77,7 +100,7 @@ const Auth = () => {
   );
 };
 
-export default Auth;
+export default AuthScreen;
 
 const {width} = Dimensions.get('window');
 const styles = StyleSheet.create({

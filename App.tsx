@@ -5,16 +5,17 @@ import React from 'react';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import Home from './src/screens/Home';
 import NewBook from './src/screens/NewBook';
-import Auth from './src/screens/Auth';
+import AuthScreen from './src/screens/Auth';
 import {RootStackParamList} from './src/navigation/types';
 import {extendTheme, NativeBaseProvider} from 'native-base';
-import {getAuth} from 'firebase/auth';
+import {Auth, getAuth, onAuthStateChanged} from 'firebase/auth';
 import {getApps, initializeApp} from 'firebase/app';
 import {firebaseConfig} from './src/libs/firebase';
 import EmailSignUp from './src/screens/EmailSignUp';
 
 const App = () => {
   // const isDarkMode = useColorScheme() === "dark";
+  const [authInstance, setAuthInstance] = React.useState<Auth>(getAuth());
 
   LogBox.ignoreLogs([
     "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
@@ -31,7 +32,17 @@ const App = () => {
   if (!getApps().length) {
     initializeApp(firebaseConfig);
   }
-  const auth = getAuth();
+
+  React.useMemo(() => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        setAuthInstance(auth);
+      } else {
+        auth.signOut();
+      }
+    });
+  }, []);
 
   const Stack = createNativeStackNavigator<RootStackParamList>();
   return (
@@ -39,7 +50,7 @@ const App = () => {
       <NativeBaseProvider theme={nativeBaseTheme}>
         <NavigationContainer>
           <Stack.Navigator>
-            {auth.currentUser ? (
+            {authInstance.currentUser ? (
               <>
                 <Stack.Screen
                   name="Home"
@@ -65,7 +76,7 @@ const App = () => {
               <>
                 <Stack.Screen
                   name="Auth"
-                  component={Auth}
+                  component={AuthScreen}
                   options={{headerShown: false}}
                 />
                 <Stack.Screen
