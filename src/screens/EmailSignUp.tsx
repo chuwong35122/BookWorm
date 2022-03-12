@@ -17,7 +17,7 @@ import {NewAccount} from '../interfaces/user.interface';
 import {
   emailSignUpFormValidation,
   signUpWithEmail,
-  storeUsername,
+  storeInitialUserInfo,
 } from '../libs/authentication/signup';
 import {AuthError, getAuth} from 'firebase/auth';
 
@@ -50,7 +50,7 @@ const EmailSignUp = () => {
     try {
       const credential = await signUpWithEmail(data.email, data.password);
       if (credential.uid) {
-        await storeUsername(data.username, credential.uid);
+        await storeInitialUserInfo(data.username, credential.uid);
         toast.show({
           title: 'Account created! 🎊',
           status: 'success',
@@ -61,6 +61,7 @@ const EmailSignUp = () => {
         auth.signOut();
       }
     } catch (err) {
+      // More info here: https://firebase.google.com/docs/auth/admin/errors
       const error = err as AuthError;
       let errorMessage = 'An unknown error has occurred.';
 
