@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../navigation/types';
 import RecentBooks from '../components/organisms/RecentBooks';
+import Profile from '../components/organisms/Profile';
 
 const Home = () => {
   const navigation =
@@ -12,6 +13,7 @@ const Home = () => {
 
   return (
     <>
+      <Profile />
       <RecentBooks />
       <View style={styles.container}>
         <ScrollView>
