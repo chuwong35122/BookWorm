@@ -9,6 +9,7 @@ import {
   Icon,
   Button,
   VStack,
+  useToast,
 } from 'native-base';
 import {Formik} from 'formik';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -17,17 +18,14 @@ import {
   emailSignUpFormValidation,
   signUpWithEmail,
   storeUsername,
-} from './../libs/authentication/signup';
-import {getAuth} from 'firebase/auth';
-import {useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../navigation/types';
+} from '../libs/authentication/signup';
+import {AuthError, getAuth} from 'firebase/auth';
 
 const EmailSignUp = () => {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [show, setShow] = React.useState(false);
   const [showConfirm, setShowConfirm] = React.useState(false);
+
+  const toast = useToast();
 
   const account: NewAccount = {
     email: undefined,
@@ -49,13 +47,33 @@ const EmailSignUp = () => {
       return;
     }
 
-    const credential = await signUpWithEmail(data.email, data.password);
-    if (credential.uid) {
-      await storeUsername(data.username, credential.uid);
-      navigation.replace('Home');
-    } else {
-      const auth = getAuth();
-      auth.signOut();
+    try {
+      const credential = await signUpWithEmail(data.email, data.password);
+      if (credential.uid) {
+        await storeUsername(data.username, credential.uid);
+        toast.show({
+          title: 'Account created! 🎊',
+          status: 'success',
+          description: 'Welcome to BookWorm.',
+        });
+      } else {
+        const auth = getAuth();
+        auth.signOut();
+      }
+    } catch (err) {
+      const error = err as AuthError;
+      let errorMessage = 'An unknown error has occurred.';
+
+      if (error.code === 'auth/email-already-in-use') {
+        errorMessage =
+          'This email is already in used. Please use a new email address.';
+      }
+
+      toast.show({
+        title: 'Cannot sign-up an account.',
+        status: 'error',
+        description: errorMessage,
+      });
     }
   }
 
@@ -74,7 +92,7 @@ const EmailSignUp = () => {
               <VStack w="90%" space={4}>
                 <FormControl isRequired isInvalid={'email' in errors}>
                   <Input
-                    placeholder="Enter Email"
+                    placeholder="Email"
                     onChangeText={handleChange('email')}
                   />
                   <FormControl.ErrorMessage

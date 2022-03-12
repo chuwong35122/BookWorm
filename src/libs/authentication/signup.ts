@@ -36,7 +36,13 @@ export async function signUpWithEmail(email: string, password: string) {
 
 export async function signInWithEmail(email: string, password: string) {
   const auth = getAuth();
-  const credential = await signInWithEmailAndPassword(auth, email, password);
+  const credential = await signInWithEmailAndPassword(
+    auth,
+    email,
+    password,
+  ).catch(() => {
+    throw new Error('Cannot sign-in.');
+  });
   return credential.user;
 }
 

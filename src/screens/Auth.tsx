@@ -18,10 +18,7 @@ const AuthScreen = () => {
 
   async function handleSignIn() {
     const credential = await signInWithEmail(email, password);
-    console.log(credential.uid);
-    if (credential.uid) {
-      navigation.replace('Home');
-    } else {
+    if (!credential.uid) {
       const auth = getAuth();
       auth.signOut();
     }

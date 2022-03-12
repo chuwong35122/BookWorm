@@ -8,7 +8,7 @@ import NewBook from './src/screens/NewBook';
 import AuthScreen from './src/screens/Auth';
 import {RootStackParamList} from './src/navigation/types';
 import {extendTheme, NativeBaseProvider} from 'native-base';
-import {Auth, getAuth, onAuthStateChanged} from 'firebase/auth';
+import {getAuth, onAuthStateChanged, User} from 'firebase/auth';
 import EmailSignUp from './src/screens/EmailSignUp';
 import {firebaseConfig} from './src/libs/firebase';
 import {getFirestore} from 'firebase/firestore';
@@ -20,11 +20,12 @@ export const db = getFirestore(app);
 const App = () => {
   // const isDarkMode = useColorScheme() === "dark";
 
-  const [authInstance, setAuthInstance] = React.useState<Auth>(getAuth());
+  const [user, setUser] = React.useState<User | null>(null);
 
   LogBox.ignoreLogs([
     "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
     'NativeBase: The contrast ratio of 1:1 for darkText on transparent',
+    'AsyncStorage has been extracted from react-native core and will be removed in a future release.',
   ]);
 
   const nativeBaseTheme = extendTheme({
@@ -36,14 +37,19 @@ const App = () => {
 
   React.useMemo(() => {
     const auth = getAuth();
-    onAuthStateChanged(auth, user => {
-      if (user) {
-        setAuthInstance(auth);
+    onAuthStateChanged(auth, authUser => {
+      if (authUser) {
+        setUser(authUser);
       } else {
         auth.signOut();
       }
     });
   }, []);
+
+  //TODO: Remove this later. It's for testing & development.
+  React.useEffect(() => {
+    console.log(user);
+  }, [user]);
 
   const Stack = createNativeStackNavigator<RootStackParamList>();
   return (
@@ -51,7 +57,7 @@ const App = () => {
       <NativeBaseProvider theme={nativeBaseTheme}>
         <NavigationContainer>
           <Stack.Navigator>
-            {authInstance.currentUser ? (
+            {user ? (
               <>
                 <Stack.Screen
                   name="Home"
