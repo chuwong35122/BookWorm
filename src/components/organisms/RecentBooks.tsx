@@ -13,8 +13,7 @@ const RecentBooks = () => {
       <Input
         mx="3"
         placeholder="Search title/ISBN/author"
-        height="12"
-        w="94%"
+        height="10"
         fontSize="md"
         px={4}
         backgroundColor="#fff"
@@ -28,11 +27,11 @@ const RecentBooks = () => {
             mr={4}
           />
         }
-        my={2}
-        mt={5}
+        my={4}
+        alignSelf="center"
       />
       <View style={{paddingHorizontal: 20}}>
-        <Text fontSize="2xl" bold mb={2}>
+        <Text fontSize="xl" bold mb={2}>
           Recently Opened
         </Text>
         {recent.length > 0 ? (
