@@ -9,12 +9,17 @@ import AuthScreen from './src/screens/Auth';
 import {RootStackParamList} from './src/navigation/types';
 import {extendTheme, NativeBaseProvider} from 'native-base';
 import {Auth, getAuth, onAuthStateChanged} from 'firebase/auth';
-import {getApps, initializeApp} from 'firebase/app';
-import {firebaseConfig} from './src/libs/firebase';
 import EmailSignUp from './src/screens/EmailSignUp';
+import {firebaseConfig} from './src/libs/firebase';
+import {getFirestore} from 'firebase/firestore';
+import {initializeApp} from 'firebase/app';
+
+const app = initializeApp(firebaseConfig);
+export const db = getFirestore(app);
 
 const App = () => {
   // const isDarkMode = useColorScheme() === "dark";
+
   const [authInstance, setAuthInstance] = React.useState<Auth>(getAuth());
 
   LogBox.ignoreLogs([
@@ -28,10 +33,6 @@ const App = () => {
       // },
     },
   });
-
-  if (!getApps().length) {
-    initializeApp(firebaseConfig);
-  }
 
   React.useMemo(() => {
     const auth = getAuth();

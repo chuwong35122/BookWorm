@@ -4,7 +4,8 @@ import {
   signInWithEmailAndPassword,
 } from 'firebase/auth';
 import * as Yup from 'yup';
-import {doc, getFirestore, setDoc} from 'firebase/firestore';
+import {doc, setDoc} from 'firebase/firestore';
+import {db} from '../../../App';
 
 export const emailSignUpFormValidation = Yup.object().shape({
   email: Yup.string().email('Email is invalid.').required('Email is required.'),
@@ -40,7 +41,7 @@ export async function signInWithEmail(email: string, password: string) {
 }
 
 export async function storeUsername(username: string, uid: string) {
-  await setDoc(doc(getFirestore(), 'User', uid), {
+  await setDoc(doc(db, 'User', uid), {
     username: username,
   });
 }
