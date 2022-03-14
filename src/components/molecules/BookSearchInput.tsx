@@ -5,6 +5,7 @@ import React from 'react';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/types';
 import {useNavigation, useRoute} from '@react-navigation/native';
+import {useDebounce} from 'use-debounce';
 
 export type Query =
   | 'intitle'
@@ -31,19 +32,25 @@ const BookSearchInput = ({
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const route = useRoute();
-
   const inputRef = React.useRef<any>();
 
-  function handleFocus() {
-    if ((route.name as string) === 'Home') {
-      navigation.navigate('SearchBook', {
-        q: q,
-        setQ: setQ,
-        search: search,
-        setSearch: setSearch,
-      });
+  const [searchValue] = useDebounce(search, 750);
+  const [placeholder, setPlaceholder] = React.useState('');
+
+  React.useEffect(() => {
+    console.log(searchValue);
+    //     https://www.googleapis.com/books/v1/volumes?q=flowers+inauthor:keyes&key=yourAPIKey
+  }, [searchValue]);
+
+  React.useEffect(() => {
+    if (q === 'inauthor') {
+      setPlaceholder('Search books with its author.');
+    } else if (q === 'intitle') {
+      setPlaceholder('Search books with its title.');
+    } else if (q === 'isbn') {
+      setPlaceholder('Search books with its ISBN.');
     }
-  }
+  }, [q]);
 
   React.useEffect(() => {
     if ((route.name as string) === 'SearchBook') {
@@ -80,7 +87,7 @@ const BookSearchInput = ({
         mx={4}
         mt={2}
         mb={6}
-        placeholder="Search title/ISBN/author"
+        placeholder={placeholder}
         height="10"
         fontSize="md"
         px={4}
@@ -95,7 +102,6 @@ const BookSearchInput = ({
             mr={4}
           />
         }
-        onFocus={handleFocus}
       />
     </View>
   );

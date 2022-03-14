@@ -1,7 +1,7 @@
 import {StyleSheet, View} from 'react-native';
 import React from 'react';
 import {Text, Icon} from 'native-base';
-import BookSearchInput from '../components/molecules/BookSearchInput';
+import BookSearchInput, {Query} from '../components/molecules/BookSearchInput';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../navigation/types';
@@ -10,7 +10,8 @@ const SearchBook = ({
   route,
   navigation,
 }: NativeStackScreenProps<RootStackParamList, 'SearchBook'>) => {
-  const {q, setQ, search, setSearch} = route.params;
+  const [q, setQ] = React.useState<Query>('intitle');
+  const [search, setSearch] = React.useState('');
 
   return (
     <View>

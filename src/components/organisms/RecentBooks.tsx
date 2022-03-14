@@ -1,21 +1,40 @@
 import {StyleSheet, View} from 'react-native';
-import {Text} from 'native-base';
+import {Icon, Input, Text} from 'native-base';
 import {FlatList} from 'react-native-gesture-handler';
 import React from 'react';
-import BookSearchInput, {Query} from '../molecules/BookSearchInput';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../../navigation/types';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const RecentBooks = () => {
   const [recent, setRecent] = React.useState([]);
-  const [q, setQ] = React.useState<Query>('intitle');
-  const [search, setSearch] = React.useState('');
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   return (
     <View style={styles.shelf}>
-      <BookSearchInput
-        q={q}
-        setQ={setQ}
-        search={search}
-        setSearch={setSearch}
+      <Input
+        mx={4}
+        mt={2}
+        mb={6}
+        placeholder="Search title/ISBN/author"
+        height="10"
+        fontSize="md"
+        px={4}
+        backgroundColor="#fff"
+        variant="rounded"
+        InputRightElement={
+          <Icon
+            as={MaterialIcons}
+            name="search"
+            size={8}
+            color="gray.400"
+            mr={4}
+          />
+        }
+        onFocus={() => navigation.navigate('SearchBook')}
+        showSoftInputOnFocus
       />
       <View style={styles.recently}>
         <Text fontSize="xl" bold mb={2}>
