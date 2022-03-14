@@ -13,6 +13,7 @@ import EmailSignUp from './src/screens/EmailSignUp';
 import {firebaseConfig} from './src/libs/firebase';
 import {getFirestore} from 'firebase/firestore';
 import {initializeApp} from 'firebase/app';
+import SearchBook from './src/screens/SearchBook';
 
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
@@ -77,6 +78,11 @@ const App = () => {
                       fontWeight: '500',
                     },
                   }}
+                />
+                <Stack.Screen
+                  name="SearchBook"
+                  component={SearchBook}
+                  options={{headerShown: false}}
                 />
               </>
             ) : (
