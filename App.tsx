@@ -14,6 +14,7 @@ import {firebaseConfig} from './src/libs/firebase';
 import {getFirestore} from 'firebase/firestore';
 import {initializeApp} from 'firebase/app';
 import SearchBook from './src/screens/SearchBook';
+import {QueryClient, QueryClientProvider} from 'react-query';
 
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
@@ -53,61 +54,66 @@ const App = () => {
   }, [user]);
 
   const Stack = createNativeStackNavigator<RootStackParamList>();
+
+  const queryClient = new QueryClient();
+
   return (
     <SafeAreaProvider>
-      <NativeBaseProvider theme={nativeBaseTheme}>
-        <NavigationContainer>
-          <Stack.Navigator>
-            {user ? (
-              <>
-                <Stack.Screen
-                  name="Home"
-                  component={Home}
-                  options={{headerShown: false}}
-                />
-                <Stack.Screen
-                  name="NewBook"
-                  component={NewBook}
-                  options={{
-                    title: 'Add a New Book',
-                    headerStyle: {
-                      backgroundColor: 'rgb(180,221,227)',
-                    },
-                    headerTintColor: '#0d47a1',
-                    headerTitleStyle: {
-                      fontWeight: '500',
-                    },
-                  }}
-                />
-                <Stack.Screen
-                  name="SearchBook"
-                  component={SearchBook}
-                  options={{headerShown: false}}
-                />
-              </>
-            ) : (
-              <>
-                <Stack.Screen
-                  name="Auth"
-                  component={AuthScreen}
-                  options={{headerShown: false}}
-                />
-                <Stack.Screen
-                  name="EmailSignUp"
-                  component={EmailSignUp}
-                  options={{
-                    title: 'Email Sign-in',
-                    headerStyle: {
-                      backgroundColor: 'rgb(180,221,227)',
-                    },
-                    headerTintColor: '#0d47a1',
-                  }}
-                />
-              </>
-            )}
-          </Stack.Navigator>
-        </NavigationContainer>
-      </NativeBaseProvider>
+      <QueryClientProvider client={queryClient}>
+        <NativeBaseProvider theme={nativeBaseTheme}>
+          <NavigationContainer>
+            <Stack.Navigator>
+              {user ? (
+                <>
+                  <Stack.Screen
+                    name="Home"
+                    component={Home}
+                    options={{headerShown: false}}
+                  />
+                  <Stack.Screen
+                    name="NewBook"
+                    component={NewBook}
+                    options={{
+                      title: 'Add a New Book',
+                      headerStyle: {
+                        backgroundColor: 'rgb(180,221,227)',
+                      },
+                      headerTintColor: '#0d47a1',
+                      headerTitleStyle: {
+                        fontWeight: '500',
+                      },
+                    }}
+                  />
+                  <Stack.Screen
+                    name="SearchBook"
+                    component={SearchBook}
+                    options={{headerShown: false}}
+                  />
+                </>
+              ) : (
+                <>
+                  <Stack.Screen
+                    name="Auth"
+                    component={AuthScreen}
+                    options={{headerShown: false}}
+                  />
+                  <Stack.Screen
+                    name="EmailSignUp"
+                    component={EmailSignUp}
+                    options={{
+                      title: 'Email Sign-in',
+                      headerStyle: {
+                        backgroundColor: 'rgb(180,221,227)',
+                      },
+                      headerTintColor: '#0d47a1',
+                    }}
+                  />
+                </>
+              )}
+            </Stack.Navigator>
+          </NavigationContainer>
+        </NativeBaseProvider>
+      </QueryClientProvider>
     </SafeAreaProvider>
   );
 };
