@@ -15,6 +15,7 @@ import {getFirestore} from 'firebase/firestore';
 import {initializeApp} from 'firebase/app';
 import SearchBook from './src/screens/SearchBook';
 import {QueryClient, QueryClientProvider} from 'react-query';
+import BookDetail from './src/screens/BookDetail';
 
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
@@ -88,6 +89,11 @@ const App = () => {
                     name="SearchBook"
                     component={SearchBook}
                     options={{headerShown: false}}
+                  />
+                  <Stack.Screen
+                    name="BookDetail"
+                    component={BookDetail}
+                    // options={{headerShown: false}}
                   />
                 </>
               ) : (
