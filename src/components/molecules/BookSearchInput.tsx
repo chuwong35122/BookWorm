@@ -1,11 +1,15 @@
 import {StyleSheet, View} from 'react-native';
-import {Icon, Input, HStack, Radio} from 'native-base';
+import {Icon, Input, HStack, Radio, FlatList} from 'native-base';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import React from 'react';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/types';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {useDebounce} from 'use-debounce';
+import {searchBookByQ} from '../../libs/books/search';
+import useAsyncEffect from './../../hooks/useAsyncEffect';
+import {Book} from '../../libs/books/book.interface';
+import BookSearchItem from './BookSearchItem';
 
 export type Query =
   | 'intitle'
@@ -31,17 +35,25 @@ const BookSearchInput = ({
 }: BookSearchInputProps) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const route = useRoute();
-  const inputRef = React.useRef<any>();
 
   const [searchValue] = useDebounce(search, 750);
   const [placeholder, setPlaceholder] = React.useState('');
+  const [results, setResults] = React.useState<Book[]>();
 
-  React.useEffect(() => {
-    console.log(searchValue);
-    //     https://www.googleapis.com/books/v1/volumes?q=flowers+inauthor:keyes&key=yourAPIKey
-  }, [searchValue]);
+  useAsyncEffect(async () => {
+    // console.log(searchValue);
+    if (searchValue === '') {
+      return;
+    }
 
+    const books = await searchBookByQ(q, searchValue);
+    setResults(books.items);
+    console.log(results);
+  }, [searchValue, q]);
+
+  /**
+   * A function that change placeholder value based on q.
+   */
   React.useEffect(() => {
     if (q === 'inauthor') {
       setPlaceholder('Search books with its author.');
@@ -51,14 +63,6 @@ const BookSearchInput = ({
       setPlaceholder('Search books with its ISBN.');
     }
   }, [q]);
-
-  React.useEffect(() => {
-    if ((route.name as string) === 'SearchBook') {
-      if (inputRef.current) {
-        inputRef.current.focus();
-      }
-    }
-  }, [route]);
 
   return (
     <View>
@@ -81,7 +85,6 @@ const BookSearchInput = ({
         </HStack>
       </Radio.Group>
       <Input
-        ref={inputRef}
         value={search}
         onChangeText={val => setSearch(val)}
         mx={4}
@@ -93,6 +96,7 @@ const BookSearchInput = ({
         px={4}
         backgroundColor="#fff"
         variant="rounded"
+        autoFocus
         InputRightElement={
           <Icon
             as={MaterialIcons}
@@ -102,6 +106,11 @@ const BookSearchInput = ({
             mr={4}
           />
         }
+      />
+      <FlatList
+        data={results}
+        renderItem={({item}) => <BookSearchItem data={item} />}
+        keyExtractor={(_, index) => index.toString()}
       />
     </View>
   );

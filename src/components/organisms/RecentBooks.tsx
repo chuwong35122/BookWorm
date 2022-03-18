@@ -34,7 +34,7 @@ const RecentBooks = () => {
           />
         }
         onFocus={() => navigation.navigate('SearchBook')}
-        showSoftInputOnFocus
+        showSoftInputOnFocus={false}
       />
       <View style={styles.recently}>
         <Text fontSize="xl" bold mb={2}>

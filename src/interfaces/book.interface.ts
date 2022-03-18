@@ -1,4 +1,4 @@
-export interface Book {
+export interface BookList {
   isbn: string;
   status: 'reading' | 'wishlist' | 'finished';
   memo: Memo[];
