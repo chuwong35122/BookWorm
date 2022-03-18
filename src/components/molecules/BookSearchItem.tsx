@@ -41,7 +41,7 @@ const BookSearchItem = ({data}: BookSearchItemProps) => {
                 numberOfLines={3}
                 flexWrap="wrap"
                 fontSize="lg"
-                color="yellow.500"
+                color="orange.600"
                 fontWeight="600">
                 {data.volumeInfo.title}
               </Text>

@@ -93,7 +93,7 @@ const App = () => {
                   <Stack.Screen
                     name="BookDetail"
                     component={BookDetail}
-                    // options={{headerShown: false}}
+                    options={{title: 'Book Detail', headerTitleAlign: 'center'}}
                   />
                 </>
               ) : (

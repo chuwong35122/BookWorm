@@ -1,14 +1,107 @@
-import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import {StyleSheet, Linking} from 'react-native';
+import React, {useCallback} from 'react';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../navigation/types';
+import {
+  Image,
+  ScrollView,
+  Text,
+  VStack,
+  Button,
+  Icon,
+  View,
+  useToast,
+} from 'native-base';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import BookAuthorList from '../components/atoms/BookAuthorList';
+import BookCategoryList from '../components/atoms/BookCategoryList';
 
-const BookDetail = () => {
+const BookDetail = ({
+  route,
+}: NativeStackScreenProps<RootStackParamList, 'BookDetail'>) => {
+  const {kind, saleInfo, selfLink, volumeInfo} = route.params;
+  const toast = useToast();
+
+  function handlePressAdd() {}
+
+  const handlePressBuy = useCallback(async () => {
+    const supported = await Linking.canOpenURL(volumeInfo.infoLink);
+
+    if (supported) {
+      await Linking.openURL(volumeInfo.infoLink);
+    } else {
+      toast.show({
+        title: 'Cannot open Google Play page.',
+        placement: 'bottom',
+        status: 'error',
+      });
+    }
+  }, [volumeInfo, toast]);
+
   return (
-    <View>
-      <Text>BookDetail</Text>
-    </View>
+    <ScrollView>
+      <VStack alignItems="center" py="8" space={4}>
+        <Image
+          source={{uri: volumeInfo.imageLinks.thumbnail}}
+          alt={`Image of ${volumeInfo.title}`}
+          width="64"
+          height="64"
+          style={styles.image}
+        />
+        <Text fontSize="2xl" color="orange.400">
+          {volumeInfo.title}
+        </Text>
+        <BookAuthorList authors={volumeInfo.authors} />
+        <BookCategoryList categories={volumeInfo.categories} />
+        <View p={2}>
+          <Text fontSize="lg" bold>
+            Descriptions
+          </Text>
+          <Text fontSize="sm">{volumeInfo.description}</Text>
+        </View>
+        <Button
+          colorScheme="info"
+          variant="outline"
+          w="full"
+          onPress={handlePressBuy}
+          leftIcon={
+            <Icon
+              as={MaterialCommunityIcons}
+              name="google-play"
+              size="md"
+              color="info.400"
+            />
+          }>
+          <Text fontSize="lg" fontWeight="lg" color="info.400">
+            Buy this book on Google Play
+          </Text>
+        </Button>
+        <Button
+          colorScheme="success"
+          w="full"
+          onPress={handlePressAdd}
+          leftIcon={
+            <Icon
+              as={MaterialIcons}
+              name="playlist-add"
+              size="md"
+              color="white"
+            />
+          }>
+          <Text fontSize="lg" fontWeight="lg" color="white">
+            Add to my Book List
+          </Text>
+        </Button>
+      </VStack>
+    </ScrollView>
   );
 };
 
 export default BookDetail;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  image: {
+    resizeMode: 'contain',
+  },
+});
