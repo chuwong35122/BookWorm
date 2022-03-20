@@ -24,6 +24,7 @@ import {AuthError, getAuth} from 'firebase/auth';
 const EmailSignUp = () => {
   const [show, setShow] = React.useState(false);
   const [showConfirm, setShowConfirm] = React.useState(false);
+  const [pressed, setPressed] = React.useState(false);
 
   const toast = useToast();
 
@@ -48,6 +49,7 @@ const EmailSignUp = () => {
     }
 
     try {
+      setPressed(true);
       const credential = await signUpWithEmail(data.email, data.password);
       if (credential.uid) {
         await storeInitialUserInfo(data.username, credential.uid);
@@ -84,7 +86,7 @@ const EmailSignUp = () => {
       onSubmit={onSubmit}
       validationSchema={emailSignUpFormValidation}>
       {({handleChange, handleSubmit, errors, touched}) => (
-        <ScrollView style={{backgroundColor: '#BEE3DB'}}>
+        <ScrollView bgColor="#BEE3DB">
           <View style={styles.container}>
             <View style={styles.signInContainer}>
               <Text fontSize="xl" bold my={4}>

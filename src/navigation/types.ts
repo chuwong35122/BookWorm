@@ -7,4 +7,5 @@ export type RootStackParamList = {
   BookDetail: Book;
   Auth: undefined;
   EmailSignUp: undefined;
+  Profile: undefined;
 };

@@ -8,7 +8,6 @@ import NewBook from './src/screens/NewBook';
 import AuthScreen from './src/screens/Auth';
 import {RootStackParamList} from './src/navigation/types';
 import {extendTheme, NativeBaseProvider} from 'native-base';
-import {getAuth, onAuthStateChanged, User} from 'firebase/auth';
 import EmailSignUp from './src/screens/EmailSignUp';
 import {firebaseConfig} from './src/libs/firebase';
 import {getFirestore} from 'firebase/firestore';
@@ -16,14 +15,14 @@ import {initializeApp} from 'firebase/app';
 import SearchBook from './src/screens/SearchBook';
 import {QueryClient, QueryClientProvider} from 'react-query';
 import BookDetail from './src/screens/BookDetail';
+import MyProfile from './src/screens/MyProfile';
+import {useFirebaseAuth} from './src/hooks/useFirebaseAuth';
 
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 
 const App = () => {
   // const isDarkMode = useColorScheme() === "dark";
-
-  const [user, setUser] = React.useState<User | null>(null);
 
   LogBox.ignoreLogs([
     "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
@@ -38,25 +37,10 @@ const App = () => {
     },
   });
 
-  React.useMemo(() => {
-    const auth = getAuth();
-    onAuthStateChanged(auth, authUser => {
-      if (authUser) {
-        setUser(authUser);
-      } else {
-        auth.signOut();
-      }
-    });
-  }, []);
-
-  //TODO: Remove this later. It's for testing & development.
-  React.useEffect(() => {
-    console.log(user);
-  }, [user]);
-
   const Stack = createNativeStackNavigator<RootStackParamList>();
 
   const queryClient = new QueryClient();
+  const {user} = useFirebaseAuth();
 
   return (
     <SafeAreaProvider>
@@ -94,6 +78,11 @@ const App = () => {
                     name="BookDetail"
                     component={BookDetail}
                     options={{title: 'Book Detail', headerTitleAlign: 'center'}}
+                  />
+                  <Stack.Screen
+                    name="Profile"
+                    component={MyProfile}
+                    options={{title: 'My Profile', headerTitleAlign: 'center'}}
                   />
                 </>
               ) : (
