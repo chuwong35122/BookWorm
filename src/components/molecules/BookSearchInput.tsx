@@ -6,12 +6,13 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/types';
 import {useNavigation} from '@react-navigation/native';
 import {useDebounce} from 'use-debounce';
-import {searchBookByQ} from '../../libs/books/search';
+import {searchBookByTitle} from '../../libs/books/search';
 import useAsyncEffect from './../../hooks/useAsyncEffect';
 import {Book} from '../../libs/books/book.interface';
 import BookSearchItem from './BookSearchItem';
 
 export type Query =
+  | 'title'
   | 'intitle'
   | 'inauthor'
   | 'inpublisher'
@@ -46,9 +47,11 @@ const BookSearchInput = ({
       return;
     }
 
-    const books = await searchBookByQ(q, searchValue);
-    setResults(books);
-    console.log(results);
+    if (q === 'title') {
+      const books = await searchBookByTitle(searchValue);
+      setResults(books);
+    } else if (q === 'isbn') {
+    }
   }, [searchValue, q]);
 
   /**
@@ -57,7 +60,7 @@ const BookSearchInput = ({
   React.useEffect(() => {
     if (q === 'inauthor') {
       setPlaceholder('Search books with its author.');
-    } else if (q === 'intitle') {
+    } else if (q === 'title') {
       setPlaceholder('Search books with its title.');
     } else if (q === 'isbn') {
       setPlaceholder('Search books with its ISBN.');
@@ -73,14 +76,11 @@ const BookSearchInput = ({
         value={q}
         onChange={val => setQ(val as Query)}>
         <HStack alignSelf="center" justifyContent="space-between" space={5}>
-          <Radio value="intitle" my={1}>
+          <Radio value="title" my={1}>
             Title
           </Radio>
           <Radio value="isbn" my={1}>
             ISBN
-          </Radio>
-          <Radio value="inauthor" my={1}>
-            Author
           </Radio>
         </HStack>
       </Radio.Group>
