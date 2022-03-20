@@ -41,7 +41,7 @@ const BookSearchInput = ({
   const [results, setResults] = React.useState<Book[]>();
 
   useAsyncEffect(async () => {
-    // console.log(searchValue);
+    console.log(q);
     if (searchValue === '') {
       return;
     }

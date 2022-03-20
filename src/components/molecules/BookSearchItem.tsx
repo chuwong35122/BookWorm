@@ -14,6 +14,9 @@ type BookSearchItemProps = {
 const BookSearchItem = ({data}: BookSearchItemProps) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const {authors, imageLinks, title, categories, averageRating} =
+    data.volumeInfo;
   return (
     <View my={2} flex={1}>
       <TouchableOpacity onPress={() => navigation.navigate('BookDetail', data)}>
@@ -23,14 +26,28 @@ const BookSearchItem = ({data}: BookSearchItemProps) => {
           justifyContent="space-between"
           alignItems="center"
           px={4}>
-          <Image
-            source={{uri: data.volumeInfo.imageLinks.thumbnail}}
-            width="32"
-            height="48"
-            alt={data.volumeInfo.title}
-            mr={4}
-            style={styles.image}
-          />
+          {imageLinks ? (
+            <Image
+              source={{uri: imageLinks.thumbnail}}
+              width="32"
+              height="48"
+              alt={title}
+              mr={4}
+              style={styles.image}
+            />
+          ) : (
+            <View
+              width="32"
+              height="48"
+              alignItems="center"
+              justifyContent="center"
+              bgColor="coolGray.800"
+              mr={4}>
+              <Text fontSize="xs" color="#fff">
+                No Preview Image
+              </Text>
+            </View>
+          )}
           <View
             justifyContent="space-between"
             alignItems="flex-start"
@@ -45,11 +62,15 @@ const BookSearchItem = ({data}: BookSearchItemProps) => {
                 fontWeight="600">
                 {data.volumeInfo.title}
               </Text>
-              <BookAuthorList authors={data.volumeInfo.authors} />
+              {authors ? (
+                <BookAuthorList authors={authors} />
+              ) : (
+                <Text color="gray.500">by Unknown author</Text>
+              )}
             </View>
             <HStack space={2}>
-              {data.volumeInfo.categories &&
-                data.volumeInfo.categories.map((category, key) => {
+              {categories &&
+                categories.map((category, key) => {
                   return (
                     category && (
                       <Text fontSize="md" color="rose.500" key={key}>
@@ -59,9 +80,9 @@ const BookSearchItem = ({data}: BookSearchItemProps) => {
                   );
                 })}
             </HStack>
-            {data.volumeInfo.averageRating ? (
+            {averageRating ? (
               <Text fontSize="md" color="blueGray.500">
-                Ratings: {data.volumeInfo.averageRating} / 5
+                Ratings: {averageRating} / 5
               </Text>
             ) : (
               <Text fontSize="md" color="blueGray.500">

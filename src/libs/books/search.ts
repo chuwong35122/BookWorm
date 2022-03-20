@@ -6,13 +6,18 @@ export async function searchBookByQ(
   q: Query,
   value: string,
 ): Promise<BookSearch> {
-  //     https://www.googleapis.com/books/v1/volumes?q=flowers+inauthor:keyes&key=yourAPIKey
-  // const result = await axios.get(
-  //   `${process.env.GCP_BOOK_VOLUME_SEARCH_BASEURL}${value}${q}:keyes&key=${process.env.GCP_APIKEY}`,
-  // );
+  // https://www.googleapis.com/books/v1/volumes?q=flowers+inauthor:keyes&key=yourAPIKey
+
   const result = await axios.get(
-    'https://www.googleapis.com/books/v1/volumes?q=flowers+inauthor:keyes&key=AIzaSyC-KiwCLl8wc7Y6PczO1Mkg3lDf9WT2cTI',
+    `https://www.googleapis.com/books/v1/volumes?q=${value}+${'intitle'}:keyes&key=${
+      process.env.GCP_APIKEY
+    }`,
   );
+
+  const bookResult = result.data as BookSearch;
+  console.log(bookResult.items[0]);
+
+  // https://www.googleapis.com/books/v1/volumes?q=search+terms
 
   return result.data as BookSearch;
 }

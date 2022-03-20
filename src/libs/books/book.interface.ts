@@ -8,12 +8,12 @@ export interface Volume {
   authors: string[];
   publisher: string;
   publishedDate: string;
-  description: string;
+  description?: string;
   industryIdentifiers: Identifier[];
   pageCount: number;
-  categories: string[];
-  averageRating: number;
-  imageLinks: Thumbnail;
+  categories?: string[];
+  averageRating?: number;
+  imageLinks?: Thumbnail;
   language: string;
   previewLink: string;
   infoLink: string;
