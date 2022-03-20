@@ -1,23 +1,28 @@
 import axios from 'axios';
 import {Query} from '../../components/molecules/BookSearchInput';
-import {BookSearch} from './book.interface';
+import {Book, BookSearch} from './book.interface';
 
-export async function searchBookByQ(
-  q: Query,
-  value: string,
-): Promise<BookSearch> {
-  // https://www.googleapis.com/books/v1/volumes?q=flowers+inauthor:keyes&key=yourAPIKey
-
+export async function searchBookByTitle(value: string): Promise<Book[]> {
   const result = await axios.get(
-    `https://www.googleapis.com/books/v1/volumes?q=${value}+${'intitle'}:keyes&key=${
-      process.env.GCP_APIKEY
-    }`,
+    `https://www.googleapis.com/books/v1/volumes?q=${value}&key=${process.env.GCP_APIKEY}`,
   );
 
   const bookResult = result.data as BookSearch;
-  console.log(bookResult.items[0]);
-
-  // https://www.googleapis.com/books/v1/volumes?q=search+terms
-
-  return result.data as BookSearch;
+  return bookResult.items;
 }
+
+// const result = await axios.get(
+//   `https://www.googleapis.com/books/v1/volumes?q=${value}+${q}&key=${process.env.GCP_APIKEY}`,
+// );
+// Filter out non-e-book books.
+// const filteredResult = bookResult.items.filter(item => {
+//   return (
+//     item.accessInfo.epub.isAvailable === true ||
+//     item.accessInfo.pdf.isAvailable === true ||
+//     item.volumeInfo.imageLinks
+//   );
+// });
+
+// https://www.googleapis.com/books/v1/volumes?q=search+terms
+
+// return filteredResult;
