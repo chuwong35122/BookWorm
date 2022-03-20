@@ -1,11 +1,12 @@
 import {StyleSheet, TouchableOpacity} from 'react-native';
-import {HStack, Image, Text, View} from 'native-base';
+import {Image, Text, View} from 'native-base';
 import React from 'react';
 import {Book} from './../../libs/books/book.interface';
 import BookAuthorList from './../atoms/BookAuthorList';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/types';
+import BookCategoryList from './../atoms/BookCategoryList';
 
 type BookSearchItemProps = {
   data: Book;
@@ -60,7 +61,7 @@ const BookSearchItem = ({data}: BookSearchItemProps) => {
                 fontSize="lg"
                 color="orange.600"
                 fontWeight="600">
-                {data.volumeInfo.title}
+                {title}
               </Text>
               {authors ? (
                 <BookAuthorList authors={authors} />
@@ -68,18 +69,9 @@ const BookSearchItem = ({data}: BookSearchItemProps) => {
                 <Text color="gray.500">by Unknown author</Text>
               )}
             </View>
-            <HStack space={2}>
-              {categories &&
-                categories.map((category, key) => {
-                  return (
-                    category && (
-                      <Text fontSize="md" color="rose.500" key={key}>
-                        {category.toString()}
-                      </Text>
-                    )
-                  );
-                })}
-            </HStack>
+
+            <BookCategoryList categories={categories} />
+
             {averageRating ? (
               <Text fontSize="md" color="blueGray.500">
                 Ratings: {averageRating} / 5

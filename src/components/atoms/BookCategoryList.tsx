@@ -1,22 +1,32 @@
-import {View, Text, HStack} from 'native-base';
+import {Text, HStack, Badge} from 'native-base';
 import React from 'react';
 
 type BookCategoryListProps = {
-  categories: string[];
+  categories: string[] | undefined;
 };
 
 const BookCategoryList = ({categories}: BookCategoryListProps) => {
   return (
-    <HStack space={2}>
-      {categories.map((category, key) => {
-        return (
-          <View key={key} bgColor="rose.600" py={1} px={2} borderRadius="full">
-            <Text fontSize="md" color="#fff" bold>
-              {category}
-            </Text>
-          </View>
-        );
-      })}
+    <HStack space={2} mt={4}>
+      {categories ? (
+        <>
+          {categories.map((category, key) => {
+            return (
+              <Badge variant="solid" colorScheme="info" key={key}>
+                <Text fontSize="sm" color="#fff" bold>
+                  {category}
+                </Text>
+              </Badge>
+            );
+          })}
+        </>
+      ) : (
+        <Badge variant="solid" colorScheme="muted.400">
+          <Text fontSize="sm" color="#fff" bold>
+            No Category
+          </Text>
+        </Badge>
+      )}
     </HStack>
   );
 };

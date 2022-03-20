@@ -47,7 +47,7 @@ const BookSearchInput = ({
     }
 
     const books = await searchBookByQ(q, searchValue);
-    setResults(books.items);
+    setResults(books);
     console.log(results);
   }, [searchValue, q]);
 

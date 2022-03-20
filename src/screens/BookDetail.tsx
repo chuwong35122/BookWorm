@@ -16,6 +16,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import BookAuthorList from '../components/atoms/BookAuthorList';
 import BookCategoryList from '../components/atoms/BookCategoryList';
+import BookIndustrialIdentifier from './../components/molecules/BookIndustrialIdentifier';
 
 const BookDetail = ({
   route,
@@ -41,24 +42,47 @@ const BookDetail = ({
 
   return (
     <ScrollView>
-      <VStack alignItems="center" py="8" space={4}>
-        <Image
-          source={{uri: volumeInfo.imageLinks.thumbnail}}
-          alt={`Image of ${volumeInfo.title}`}
-          width="64"
-          height="64"
-          style={styles.image}
-        />
+      <VStack alignItems="center" py="8" space={3}>
+        {volumeInfo.imageLinks ? (
+          <Image
+            source={{uri: volumeInfo.imageLinks.thumbnail}}
+            alt={`Image of ${volumeInfo.title}`}
+            width="64"
+            height="64"
+            style={styles.image}
+          />
+        ) : (
+          <View
+            width="64"
+            height="64"
+            alignItems="center"
+            justifyContent="center"
+            bgColor="coolGray.800"
+            mr={4}>
+            <Text fontSize="xs" color="#fff">
+              No Preview Image
+            </Text>
+          </View>
+        )}
         <Text fontSize="2xl" color="orange.400">
           {volumeInfo.title}
         </Text>
         <BookAuthorList authors={volumeInfo.authors} />
+        <BookIndustrialIdentifier
+          identifiers={volumeInfo.industryIdentifiers}
+        />
         <BookCategoryList categories={volumeInfo.categories} />
         <View p={2}>
           <Text fontSize="lg" bold>
             Descriptions
           </Text>
-          <Text fontSize="sm">{volumeInfo.description}</Text>
+          {volumeInfo.description ? (
+            <Text fontSize="sm">{volumeInfo.description}</Text>
+          ) : (
+            <Text fontSize="sm" color="coolGray.500">
+              (no description)
+            </Text>
+          )}
         </View>
         <Button
           colorScheme="info"

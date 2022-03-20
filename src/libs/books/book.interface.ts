@@ -43,6 +43,15 @@ export interface SaleInfo {
   buyLink: string;
 }
 
+export interface Availability {
+  isAvailable: boolean;
+}
+export interface AccessInfo {
+  country: string;
+  epub: Availability;
+  pdf: Availability;
+}
+
 export interface Book {
   kind: string;
   id: string;
@@ -50,11 +59,11 @@ export interface Book {
   selfLink: string;
   volumeInfo: Volume;
   saleInfo: SaleInfo;
+  accessInfo: AccessInfo;
 }
 
 export interface BookSearch {
   kind: string;
   totalItems: number;
   items: Book[];
-  saleInfo: SaleInfo;
 }
