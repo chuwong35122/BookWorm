@@ -10,7 +10,7 @@ const SearchBook = ({
   route,
   navigation,
 }: NativeStackScreenProps<RootStackParamList, 'SearchBook'>) => {
-  const [q, setQ] = React.useState<Query>('intitle');
+  const [q, setQ] = React.useState<Query>('title');
   const [search, setSearch] = React.useState('');
 
   return (
