@@ -88,7 +88,7 @@ const App = () => {
                   <Stack.Screen
                     name="SearchBook"
                     component={SearchBook}
-                    options={{headerShown: false}}
+                    options={{title: 'Search Book', headerTitleAlign: 'center'}}
                   />
                   <Stack.Screen
                     name="BookDetail"

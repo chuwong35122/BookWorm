@@ -1,4 +1,4 @@
-import {Text, View} from 'native-base';
+import {HStack, Text, View} from 'native-base';
 import {Identifier} from '../../libs/books/book.interface';
 import React from 'react';
 
@@ -8,12 +8,14 @@ type BookIndustrialIdentifier = {
 
 const BookIndustrialIdentifier = ({identifiers}: BookIndustrialIdentifier) => {
   return (
-    <View>
+    <View flex={1}>
       {identifiers.map((identifier, key) => {
-        <View key={key}>
-          <Text>{identifier.type}</Text>
-          <Text>{identifier.identifier}</Text>
-        </View>;
+        return (
+          <HStack space={2} key={key}>
+            <Text>{identifier.type}</Text>
+            <Text>{identifier.identifier}</Text>
+          </HStack>
+        );
       })}
     </View>
   );

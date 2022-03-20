@@ -2,6 +2,7 @@ import {StyleSheet, Linking} from 'react-native';
 import React, {useCallback} from 'react';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../navigation/types';
+import {Identifier} from '../libs/books/book.interface';
 import {
   Image,
   ScrollView,
@@ -21,7 +22,7 @@ import BookIndustrialIdentifier from './../components/molecules/BookIndustrialId
 const BookDetail = ({
   route,
 }: NativeStackScreenProps<RootStackParamList, 'BookDetail'>) => {
-  const {kind, saleInfo, selfLink, volumeInfo} = route.params;
+  const {volumeInfo} = route.params;
   const toast = useToast();
 
   function handlePressAdd() {}
@@ -69,21 +70,10 @@ const BookDetail = ({
         </Text>
         <BookAuthorList authors={volumeInfo.authors} />
         <BookIndustrialIdentifier
-          identifiers={volumeInfo.industryIdentifiers}
+          identifiers={volumeInfo.industryIdentifiers as Identifier[]}
         />
         <BookCategoryList categories={volumeInfo.categories} />
-        <View p={2}>
-          <Text fontSize="lg" bold>
-            Descriptions
-          </Text>
-          {volumeInfo.description ? (
-            <Text fontSize="sm">{volumeInfo.description}</Text>
-          ) : (
-            <Text fontSize="sm" color="coolGray.500">
-              (no description)
-            </Text>
-          )}
-        </View>
+
         <Button
           colorScheme="info"
           variant="outline"
@@ -117,6 +107,18 @@ const BookDetail = ({
             Add to my Book List
           </Text>
         </Button>
+        <View p={2}>
+          <Text fontSize="lg" bold>
+            Descriptions
+          </Text>
+          {volumeInfo.description ? (
+            <Text fontSize="sm">{volumeInfo.description}</Text>
+          ) : (
+            <Text fontSize="sm" color="coolGray.500">
+              (no description)
+            </Text>
+          )}
+        </View>
       </VStack>
     </ScrollView>
   );

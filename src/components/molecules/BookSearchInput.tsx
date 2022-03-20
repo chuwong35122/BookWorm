@@ -1,10 +1,6 @@
-import {StyleSheet, View} from 'react-native';
-import {Icon, Input, HStack, Radio, FlatList} from 'native-base';
+import {Icon, Input, HStack, Radio, FlatList, View} from 'native-base';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import React from 'react';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../../navigation/types';
-import {useNavigation} from '@react-navigation/native';
 import {useDebounce} from 'use-debounce';
 import {searchBookByTitle} from '../../libs/books/search';
 import useAsyncEffect from './../../hooks/useAsyncEffect';
@@ -34,15 +30,11 @@ const BookSearchInput = ({
   search,
   setSearch,
 }: BookSearchInputProps) => {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-
   const [searchValue] = useDebounce(search, 750);
   const [placeholder, setPlaceholder] = React.useState('');
   const [results, setResults] = React.useState<Book[]>();
 
   useAsyncEffect(async () => {
-    console.log(q);
     if (searchValue === '') {
       return;
     }
@@ -68,7 +60,7 @@ const BookSearchInput = ({
   }, [q]);
 
   return (
-    <View>
+    <View flex={1}>
       <Radio.Group
         defaultValue="1"
         name="Book search type"
@@ -93,17 +85,16 @@ const BookSearchInput = ({
         placeholder={placeholder}
         height="10"
         fontSize="md"
-        px={4}
         backgroundColor="#fff"
         variant="rounded"
         autoFocus
-        InputRightElement={
+        InputLeftElement={
           <Icon
             as={MaterialIcons}
             name="search"
             size={8}
             color="gray.400"
-            mr={4}
+            ml={2}
           />
         }
       />
@@ -117,5 +108,3 @@ const BookSearchInput = ({
 };
 
 export default BookSearchInput;
-
-const styles = StyleSheet.create({});
