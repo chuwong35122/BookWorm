@@ -20,7 +20,7 @@ import {
   signUpWithEmail,
   storeInitialUserInfo,
 } from '../libs/authentication/signup';
-import {AuthError, getAuth} from 'firebase/auth';
+import {AuthError} from 'firebase/auth';
 
 const EmailSignUp = () => {
   const [show, setShow] = React.useState(false);
@@ -47,6 +47,7 @@ const EmailSignUp = () => {
         data.password
       )
     ) {
+      console.log('return!');
       return;
     }
 
@@ -54,15 +55,13 @@ const EmailSignUp = () => {
       setPressed(true);
       const credential = await signUpWithEmail(data.email, data.password);
       if (credential.uid) {
+        console.log(data.username + ' is signup');
         await storeInitialUserInfo(data.username, credential.uid);
         toast.show({
           title: 'Account created! 🎊',
           status: 'success',
           description: 'Welcome to BookWorm.',
         });
-      } else {
-        const auth = getAuth();
-        auth.signOut();
       }
     } catch (err) {
       // More info here: https://firebase.google.com/docs/auth/admin/errors

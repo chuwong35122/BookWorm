@@ -1,11 +1,10 @@
 import {
-  getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  getAuth,
 } from 'firebase/auth';
 import * as Yup from 'yup';
-import {doc, setDoc} from 'firebase/firestore';
-import {db} from '../../../App';
+import {doc, setDoc, getFirestore} from 'firebase/firestore';
 import {UserInfo} from './../../interfaces/user.interface';
 
 export const emailSignUpFormValidation = Yup.object().shape({
@@ -26,9 +25,8 @@ export const emailSignUpFormValidation = Yup.object().shape({
 });
 
 export async function signUpWithEmail(email: string, password: string) {
-  const auth = getAuth();
   const credential = await createUserWithEmailAndPassword(
-    auth,
+    getAuth(),
     email,
     password,
   );
@@ -36,9 +34,8 @@ export async function signUpWithEmail(email: string, password: string) {
 }
 
 export async function signInWithEmail(email: string, password: string) {
-  const auth = getAuth();
   const credential = await signInWithEmailAndPassword(
-    auth,
+    getAuth(),
     email,
     password,
   ).catch(() => {
@@ -53,7 +50,7 @@ export async function storeInitialUserInfo(username: string, uid: string) {
     recent: [],
     read: [],
   };
-  await setDoc(doc(db, 'User', uid), {
+  await setDoc(doc(getFirestore(), 'User', uid), {
     docData,
   });
 }

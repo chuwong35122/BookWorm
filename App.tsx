@@ -9,21 +9,19 @@ import AuthScreen from './src/screens/Auth';
 import {RootStackParamList} from './src/navigation/types';
 import {extendTheme, NativeBaseProvider} from 'native-base';
 import EmailSignUp from './src/screens/EmailSignUp';
-import {firebaseConfig} from './src/libs/firebase';
-import {getFirestore} from 'firebase/firestore';
-import {initializeApp} from 'firebase/app';
 import SearchBook from './src/screens/SearchBook';
 import {QueryClient, QueryClientProvider} from 'react-query';
 import BookDetail from './src/screens/BookDetail';
 import MyProfile from './src/screens/MyProfile';
 import {useFirebaseAuth} from './src/hooks/useFirebaseAuth';
-
-const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+import {initializeApp} from 'firebase/app';
+import {firebaseConfig} from './src/libs/firebase/firebase.config';
 
 const App = () => {
-  // const isDarkMode = useColorScheme() === "dark";
+  /* Initialize Firebase */
+  initializeApp(firebaseConfig);
 
+  // const isDarkMode = useColorScheme() === "dark";
   LogBox.ignoreLogs([
     "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
     'NativeBase: The contrast ratio of 1:1 for darkText on transparent',

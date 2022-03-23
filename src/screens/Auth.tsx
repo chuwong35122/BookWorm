@@ -9,7 +9,6 @@ import {
   Pressable,
   Spinner,
   useToast,
-  ScrollView,
 } from 'native-base';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import React from 'react';
@@ -38,8 +37,7 @@ const AuthScreen = () => {
     try {
       await signInWithEmail(email, password);
     } catch (err) {
-      const auth = getAuth();
-      auth.signOut();
+      getAuth().signOut();
       toast.show({
         title: 'Cannot sign-in an account.',
         status: 'error',
