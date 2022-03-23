@@ -10,6 +10,7 @@ import {
   Button,
   VStack,
   useToast,
+  Spinner,
 } from 'native-base';
 import {Formik} from 'formik';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -36,6 +37,7 @@ const EmailSignUp = () => {
   };
 
   async function onSubmit(data: NewAccount) {
+    console.log('pressed');
     if (
       !(
         data.email &&
@@ -93,7 +95,9 @@ const EmailSignUp = () => {
                 Sign-Up
               </Text>
               <VStack w="90%" space={4}>
-                <FormControl isRequired isInvalid={'email' in errors}>
+                <FormControl
+                  isRequired
+                  isInvalid={touched.email && 'email' in errors}>
                   <Input
                     placeholder="Email"
                     onChangeText={handleChange('email')}
@@ -103,7 +107,9 @@ const EmailSignUp = () => {
                     {touched.email ? errors.email : ''}
                   </FormControl.ErrorMessage>
                 </FormControl>
-                <FormControl isRequired isInvalid={'username' in errors}>
+                <FormControl
+                  isRequired
+                  isInvalid={touched.username && 'username' in errors}>
                   <Input
                     InputLeftElement={
                       <Icon
@@ -121,7 +127,9 @@ const EmailSignUp = () => {
                     {touched.username ? errors.username : ''}
                   </FormControl.ErrorMessage>
                 </FormControl>
-                <FormControl isRequired isInvalid={'password' in errors}>
+                <FormControl
+                  isRequired
+                  isInvalid={touched.password && 'password' in errors}>
                   <Input
                     type={show ? 'text' : 'password'}
                     InputRightElement={
@@ -145,7 +153,11 @@ const EmailSignUp = () => {
                     {touched.password ? errors.password : ''}
                   </FormControl.ErrorMessage>
                 </FormControl>
-                <FormControl isRequired isInvalid={'confirmPassword' in errors}>
+                <FormControl
+                  isRequired
+                  isInvalid={
+                    touched.confirmPassword && 'confirmPassword' in errors
+                  }>
                   <Input
                     type={showConfirm ? 'text' : 'password'}
                     InputRightElement={
@@ -176,7 +188,11 @@ const EmailSignUp = () => {
                     color: '#1F2937',
                   }}
                   onPress={handleSubmit}>
-                  Sign-up!
+                  {pressed ? (
+                    <Spinner color="light.50" />
+                  ) : (
+                    <Text>Sign-Up</Text>
+                  )}
                 </Button>
               </VStack>
             </View>
