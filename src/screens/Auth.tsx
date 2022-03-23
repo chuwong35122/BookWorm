@@ -1,5 +1,16 @@
 import {Dimensions, StyleSheet, View} from 'react-native';
-import {Text, Button, Icon, Stack, Input, HStack, Pressable} from 'native-base';
+import {
+  Text,
+  Button,
+  Icon,
+  Stack,
+  Input,
+  HStack,
+  Pressable,
+  Spinner,
+  useToast,
+  ScrollView,
+} from 'native-base';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -15,13 +26,29 @@ const AuthScreen = () => {
   const [show, setShow] = React.useState(false);
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [pressed, setPressed] = React.useState(false);
+  const toast = useToast();
 
   async function handleSignIn() {
-    const credential = await signInWithEmail(email, password);
-    if (!credential.uid) {
+    if (!email || !password) {
+      return;
+    }
+
+    setPressed(true); // Start spinner
+    try {
+      await signInWithEmail(email, password);
+    } catch (err) {
       const auth = getAuth();
       auth.signOut();
+      toast.show({
+        title: 'Cannot sign-in an account.',
+        status: 'error',
+        description: 'Is email or password incorrect?',
+        placement: 'bottom',
+      });
     }
+
+    setPressed(false);
   }
 
   return (
@@ -80,9 +107,9 @@ const AuthScreen = () => {
               color: '#1F2937',
             }}
             onPress={handleSignIn}>
-            Sign-In
+            {pressed ? <Spinner color="light.50" /> : <Text>Sign-In</Text>}
           </Button>
-          <HStack space={4} justifyContent="space-evenly">
+          <HStack space={4} justifyContent="space-around">
             <Pressable onPress={() => console.log('Forgot password')}>
               <Text color="gray.500">Forgot Password?</Text>
             </Pressable>
