@@ -1,4 +1,4 @@
-package com.moji.bookself;
+package com.moji.bookworm;
 
 import com.facebook.react.ReactActivity;
 
