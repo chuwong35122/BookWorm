@@ -18,14 +18,13 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import BookAuthorList from '../components/atoms/BookAuthorList';
 import BookCategoryList from '../components/atoms/BookCategoryList';
 import BookIndustrialIdentifier from './../components/molecules/BookIndustrialIdentifier';
+import {addBookToDatabase} from '../libs/books/firestore';
 
 const BookDetail = ({
   route,
 }: NativeStackScreenProps<RootStackParamList, 'BookDetail'>) => {
   const {volumeInfo} = route.params;
   const toast = useToast();
-
-  function handlePressAdd() {}
 
   const handlePressBuy = useCallback(async () => {
     const supported = await Linking.canOpenURL(volumeInfo.infoLink);
@@ -94,7 +93,7 @@ const BookDetail = ({
         <Button
           colorScheme="success"
           w="full"
-          onPress={handlePressAdd}
+          onPress={addBookToDatabase}
           leftIcon={
             <Icon
               as={MaterialIcons}
